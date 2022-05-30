@@ -1,0 +1,30 @@
+{
+  "name": "@yusukehirao/aria-trigger",
+  "private": false,
+  "version": "0.1.0",
+  "main": "./dist/aria-trigger.umd.js",
+  "module": "./dist/aria-trigger.mjs",
+  "browser": "./dist/aria-trigger.umd.js",
+  "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/aria-trigger.mjs",
+      "require": "./dist/aria-trigger.umd.js",
+      "types": "./types/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "types"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "dialog-polyfill": "^0.5.6",
+    "typescript": "^4.7.2",
+    "vite": "^2.9.9"
+  }
+}

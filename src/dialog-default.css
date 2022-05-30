@@ -1,0 +1,34 @@
+:where(dialog) {
+  display: none;
+}
+
+:where(dialog[open]) {
+  display: block;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: auto;
+  border: solid;
+  padding: 1em;
+  background-color: Canvas;
+  color: CanvasText;
+}
+
+:where(.backdrop) {
+  position: fixed;
+  background: rgba(0, 0, 0, 0.1);
+
+  /* For iOS 14.5 */
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  /* Instead of `inset: 0` */
+}
+
+[inert] :is(dialog[open], dialog[open] *) {
+  pointer-events: initial;
+  -webkit-user-select: initial;
+  user-select: initial;
+}
