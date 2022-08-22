@@ -3,10 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>[WIP] ARIA Trigger</title>
+    <title>Test Page | ARIA Trigger</title>
   </head>
   <body>
-    <h1>[WIP] ARIA Trigger</h1>
+    <h1>Test Page | ARIA Trigger</h1>
     <script type="module" src="/src/preview.ts"></script>
+
+    <button type="button" aria-controls="target">
+      <span>Dialog Button</span>
+      <svg width="50" height="50">
+        <title>SVG Image for the SVG Element Test</title>
+        <rect width="50" height="50" fill="#000"></rect>
+      </svg>
+    </button>
+    <dialog id="target" aria-modal="true" aria-labelledby="target-accname">
+      <h2 id="target-accname">Dialog Window</h2>
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Id aliquid
+        harum expedita quam labore maxime quidem minima? Ex accusamus, nemo
+        nobis quod ipsam, assumenda odio minus expedita eum ullam consequuntur.
+      </p>
+    </dialog>
   </body>
 </html>
