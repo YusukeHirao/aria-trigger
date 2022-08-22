@@ -12,15 +12,15 @@ export const querySelectorAll = (el: Element, selector: string) =>
 export const querySelector = (el: Element, selector: string) =>
   el.querySelector(selector);
 
-export const searchElement = <E extends HTMLElement = HTMLElement>(
+export const searchElement = (
   el: EventTarget | null,
   selector: string
-): E | null => {
-  if (!el || !(el instanceof HTMLElement)) {
+): HTMLElement | SVGElement | null => {
+  if (!el || !(el instanceof HTMLElement || el instanceof SVGElement)) {
     return null;
   }
   if (el.matches(selector)) {
-    return el as E;
+    return el;
   }
   return el.closest(selector);
 };
