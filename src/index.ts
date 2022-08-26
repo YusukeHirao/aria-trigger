@@ -1,4 +1,4 @@
-import { ARIA_CONTROLS } from "./const";
+import { ARIA_CONTROLS, ARIA_EXPANDED } from "./const";
 import {
   createDialogStyle,
   DialogPolyfillHook,
@@ -6,10 +6,21 @@ import {
   isSupported,
   toggleDialog,
 } from "./dialog";
-import { document, getAttribute, getElementById, searchElement } from "./dom";
+import {
+  document,
+  getAttribute,
+  getElementById,
+  removeAttribute,
+  searchElement,
+  setAttribute,
+} from "./dom";
+
+export { closeDialog } from "./dialog";
 
 export type ARIATriggerOptions = {
   dialogPolyfillHook?: DialogPolyfillHook;
+  toggleAriaExpandedDialogTrigger?: boolean;
+  onChangeDialog?: (state: "opened" | "closed") => void;
 };
 
 export const trigger = (options?: ARIATriggerOptions) => {
@@ -32,7 +43,23 @@ export const trigger = (options?: ARIATriggerOptions) => {
         continue;
       }
 
-      await toggleDialog(el, options?.dialogPolyfillHook);
+      toggleDialog(
+        el,
+        (opened) => {
+          if (options?.onChangeDialog) {
+            options.onChangeDialog(opened ? "opened" : "closed");
+          }
+
+          if (options?.toggleAriaExpandedDialogTrigger ?? true) {
+            if (opened) {
+              setAttribute(btn, ARIA_EXPANDED, "true");
+            } else {
+              removeAttribute(btn, ARIA_EXPANDED);
+            }
+          }
+        },
+        options
+      );
 
       break;
     }

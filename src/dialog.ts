@@ -1,7 +1,9 @@
+import { ARIATriggerOptions } from ".";
 import {
   ARIA_LABELLEDBY,
   ARIA_MODAL,
   DIALOG,
+  EVENT_CLOSE,
   HAS_TABINDEX_SELECTOR,
   TABINDEX,
   TRUE,
@@ -22,7 +24,7 @@ export type DialogPolyfillHook = (el: HTMLDialogElement) => void;
 
 const DIALOG_STYLE_ID = "dialog-style";
 
-const initializedElementStack = new WeakSet<HTMLElement>();
+const initializedElementStack = new Set<HTMLDialogElement>();
 const focusableElements = new Map<Element, string>();
 
 const spec = createElement(DIALOG);
@@ -35,24 +37,20 @@ export const isDialogElement = (
   return el?.localName === DIALOG;
 };
 
-export const toggleDialog = async (
+export const toggleDialog = (
   el: HTMLDialogElement,
-  polyfillHook?: DialogPolyfillHook
+  onChange: (opened: boolean) => void,
+  options?: ARIATriggerOptions
 ) => {
-  await dialogInitialize(el, polyfillHook);
-
-  const isModal = getAttribute(el, ARIA_MODAL) === TRUE;
+  dialogInitialize(el, onChange, options);
 
   // @ts-ignore
   if (el.open) {
-    // @ts-ignore
-    el.close();
-    if (isModal) {
-      unsetInert();
-    }
+    close(el);
     return;
   }
 
+  const isModal = getAttribute(el, ARIA_MODAL) === TRUE;
   if (isModal) {
     // @ts-ignore
     el.showModal();
@@ -61,6 +59,25 @@ export const toggleDialog = async (
     // @ts-ignore
     el.show();
   }
+
+  onChange(true);
+};
+
+const close = (el: HTMLDialogElement) => {
+  // @ts-ignore
+  if (el.open) {
+    // @ts-ignore
+    el.close();
+
+    const isModal = getAttribute(el, ARIA_MODAL) === TRUE;
+    if (isModal) {
+      unsetInert();
+    }
+  }
+};
+
+export const closeDialog = () => {
+  initializedElementStack.forEach((el) => close(el));
 };
 
 export const createDialogStyle = () => {
@@ -120,9 +137,10 @@ const unsetInert = () => {
   document.body.inert = false;
 };
 
-const dialogInitialize = async (
+const dialogInitialize = (
   el: HTMLDialogElement,
-  polyfillHook?: DialogPolyfillHook
+  onChange: (opened: boolean) => void,
+  options?: ARIATriggerOptions
 ) => {
   const initialized = initializedElementStack.has(el);
   if (initialized) {
@@ -130,11 +148,15 @@ const dialogInitialize = async (
   }
 
   if (!isSupported) {
-    if (polyfillHook) {
-      polyfillHook(el);
+    if (options?.dialogPolyfillHook) {
+      options.dialogPolyfillHook(el);
     }
     createDialogStyle();
   }
+
+  el.addEventListener(EVENT_CLOSE, () => {
+    onChange(false);
+  });
 
   // Binds the aria-labelledby property
   const label = querySelector(el, 'h1,h2,h3,h4,h5,h6,[role="heading"]');
