@@ -33,7 +33,7 @@ $ npm i -S @yusukehirao/aria-trigger
 ```js
 import { trigger } from "@yusukehirao/aria-trigger";
 
-window.addEventListener("DOMContentLoaded", () => trigger);
+window.addEventListener("DOMContentLoaded", () => trigger());
 ```
 
 Supports Safari version under 15.4.
@@ -54,4 +54,27 @@ window.addEventListener("DOMContentLoaded", () =>
     dialogPolyfillHook: dialogPolyfill.registerDialog,
   })
 );
+```
+
+## Options
+
+### `dialogPolyfillHook`
+
+See the section [With `dialog-polyfill` and `wicg-inert`](#with-dialog-polyfill-and-wicg-inert).
+
+### `toggleAriaExpandedDialogTrigger`
+
+Whether changes the aria-expanded state on the trigger button when opening the dialog.
+
+### `onChangeDialog`
+
+```js
+trigger({
+  /**
+   * @param {"opened" | "closed"} state
+   */
+  onChangeDialog(state) {
+    console.log(state); // Output "opened" or "closed".
+  },
+});
 ```
