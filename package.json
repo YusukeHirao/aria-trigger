@@ -1,7 +1,7 @@
 {
   "name": "@yusukehirao/aria-trigger",
   "private": false,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "main": "./dist/aria-trigger.umd.js",
   "module": "./dist/aria-trigger.mjs",
   "browser": "./dist/aria-trigger.umd.js",
